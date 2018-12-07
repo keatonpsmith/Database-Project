@@ -34,7 +34,6 @@ def register():
 def post():
     return render_template('post.html')
 
-<<<<<<< HEAD
 @app.route('/tag_someone')
 def tag_someone():
     return render_template('tag_content.html')
@@ -43,7 +42,6 @@ def tag_someone():
 def error():
     return render_template('error.html')
 
-=======
 @app.route('/new_friend')
 def newMember():
     return render_template('new_user.html')
@@ -51,7 +49,6 @@ def newMember():
 @app.route('/old_friend')
 def oldMember():
     return render_template('old_user.html')
->>>>>>> origin/master
 
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
