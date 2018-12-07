@@ -3,24 +3,32 @@
 </head>
 <body>
 
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
 
-Tags:
-<br>
+Here are the tags for your posts:
 
-<form action="/show_posts" method="GET">
+<table>
+	<th>ID</th>
+	<th>First</th>
+	<th>Last</th>
 
-
-{% for line in user_list %}
-<input type="radio" name="poster" value={{line.username}}>{{line.username}}</input>
-	<br>
+{% for line in posts %}
+	<tr>
+		<td>{{line.item_id}}</td>
+		<td>{{line.fname}}</td>
+		<td>{{line.lname}}</td>
+	</tr>
 {% endfor %}
-
-<input type="submit" value="View Posts">
-
-</form>
+</table>
 
 
-
+<br>
+<a href="/home">Go Back</a>
+<br>
 <a href="/logout">Logout</a>
 
 </body>

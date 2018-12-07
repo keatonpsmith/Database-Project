@@ -134,7 +134,11 @@ def my_posts():
 def tags():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM rate WHERE '
+    query = 'SELECT * FROM tag NATURAL JOIN person WHERE status = True AND item_id IN (SELECT item_id FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s))'
+    cursor.execute(query, (email, email))
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('tags.html', posts=data)
 
 @app.route('/logout')
 def logout():
