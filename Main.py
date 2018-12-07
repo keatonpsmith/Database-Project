@@ -158,6 +158,16 @@ def ratings():
     cursor.close()
     return render_template('ratings.html', posts=data)
 
+@app.route('/my_groups', methods=["GET", "POST"])
+def groups():
+    email = session['email']
+    cursor = conn.cursor();
+    query = 'SELECT * FROM own WHERE email = %s'
+    cursor.execute(query, (email))
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('groups.html', posts=data)
+
 @app.route('/manage_tags', methods=["GET", "POST"])
 def manage_tags():
     email = session['email']
