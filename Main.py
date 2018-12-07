@@ -98,7 +98,7 @@ def registerAuth():
 def home():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM contentitem WHERE (is_pub = 1 AND post_time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)) OR (email_post = %s) ORDER BY post_time DESC'
+    query = 'SELECT * FROM contentitem NATURAL LEFT JOIN rate WHERE (is_pub = 1 AND post_time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)) OR (email_post = %s) ORDER BY post_time DESC'
     cursor.execute(query, (email))
     data = cursor.fetchall()
     cursor.close()
