@@ -34,6 +34,14 @@ def register():
 def post():
     return render_template('post.html')
 
+@app.route('/new_friend')
+def newMember():
+    return render_template('new_user.html')
+
+@app.route('/old_friend')
+def oldMember():
+    return render_template('old_user.html')
+
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -123,6 +131,32 @@ def new_post():
         data = data.get('item_id')
         query = 'INSERT INTO share (owner_email, fg_name, item_id) VALUES(%s, %s, %s)'
         cursor.execute(query, (email, fgroup, data))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
+
+#adds new user to group
+@app.route('/new_user', methods=['GET', 'POST'])
+def new_person():
+    cursor = conn.cursor();
+    groupName  = request.form['fg_name']
+    ownerEmail  = request.form['owner_email']
+    userEmail   = request.form['user_email']
+    query = 'INSERT INTO belong (email,owner_email,fg_name) VALUES(%s,%s,%s)'
+    cursor.execute(query, (userEmail,ownerEmail,groupName))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
+
+#removes a user from a group
+@app.route('/old_user', methods=['GET', 'POST'])
+def delete_person():
+    cursor = conn.cursor();
+    groupName  = request.form['fg_name']
+    ownerEmail  = request.form['owner_email']
+    userEmail   = request.form['user_email']
+    query = 'DELETE FROM belong WHERE email = %s AND owner_email = %s AND fg_name = %s'
+    cursor.execute(query, (userEmail,ownerEmail,groupName))
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
