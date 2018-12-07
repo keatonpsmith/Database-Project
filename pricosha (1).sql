@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 07, 2018 at 09:21 AM
+-- Generation Time: Dec 07, 2018 at 10:28 AM
 -- Server version: 5.7.21
 -- PHP Version: 5.6.35
 
@@ -208,7 +208,9 @@ CREATE TABLE IF NOT EXISTS `tag` (
 --
 
 INSERT INTO `tag` (`email_tagged`, `email_tagger`, `item_id`, `status`, `tagtime`) VALUES
-('GG@nyu.edu', 'AA@nyu.edu', 2, 'True', '2018-11-20 20:00:00');
+('GG@nyu.edu', 'AA@nyu.edu', 2, 'True', '2018-11-20 20:00:00'),
+('BB@nyu.edu', 'WW@nyu.edu', 11, 'False', '2018-12-05 08:00:00'),
+('CC@nyu.edu', 'BB@nyu.edu', 10, 'False', '2018-12-04 05:15:00');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

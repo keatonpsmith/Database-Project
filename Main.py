@@ -113,8 +113,17 @@ def new_post():
     file_path = request.form['file_path']
     post_time = datetime.now()
     is_pub = int(request.form['is_pub'])
+    fgroup = request.form['fgroup']
     query = 'INSERT INTO contentitem (item_name, file_path, email_post, post_time, is_pub) VALUES(%s, %s, %s, %s, %s)'
     cursor.execute(query, (title, file_path, email, post_time, is_pub))
+    if(fgroup != "" and is_pub == 0):
+        query = 'SELECT item_id FROM contentitem WHERE item_name = %s AND email_post = %s'
+        cursor.execute(query, (title, email))
+        data = cursor.fetchone()
+        print(data)
+        data = data.get('item_id')
+        query = 'INSERT INTO share (owner_email, fg_name, item_id) VALUES(%s, %s, %s)'
+        cursor.execute(query, (email, fgroup, data))
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
@@ -149,6 +158,27 @@ def ratings():
     data = cursor.fetchall()
     cursor.close()
     return render_template('ratings.html', posts=data)
+
+@app.route('/manage_tags', methods=["GET", "POST"])
+def manage_tags():
+    email = session['email']
+    cursor = conn.cursor();
+    query = 'SELECT * FROM tag WHERE email_tagged = %s'
+    cursor.execute(query, email)
+    data = cursor.fetchall()
+    cursor.close()
+    render_template('manage_tags.html', posts = data)
+    idtoapprove = int(request.form['idtoapprove'])
+    idtodelete = int(request.form['idtodelete'])
+    cursor = conn.cursor();
+    query = 'UPDATE tag SET status = "True" WHERE item_id = %s'
+    cursor.execute(query, idtoapprove)
+    cursor.close()
+    cursor = conn.cursor();
+    query = 'DELETE FROM tag WHERE item_id = %s AND email_tagged = %s'
+    cursor.execute(query, (idtodelete, email))
+    cursor.close()
+    return redirect(url_for('home'))
 
 @app.route('/logout')
 def logout():

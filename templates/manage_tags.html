@@ -1,0 +1,48 @@
+<html>
+<head>
+</head>
+<body>
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+Here are your pending tags:
+
+<table>
+	<th>Tagger</th>
+	<th>ID</th>
+	<th>Time</th>
+
+{% for line in posts %}
+	<tr>
+		<td>{{line.email_tagger}}</td>
+		<td>{{line.item_id}}</td>
+		<td>{{line.tagtime}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+</br>
+
+<form action="/manage_tags" method="GET">
+	<input type="text" name = "idtoapprove" placeholder="# of tag to approve" /> </br>
+	<input type="text" name = "idtodelete" placeholder="# of tag to delete"/></br>
+	<input type="submit" value = Submit />
+	{% if error %}
+		<p class="error"><strong>Error:</strong> {{error}}</p>
+	{% endif %}
+</form>
+
+
+<br>
+<a href="/home">Go Back</a>
+<br>
+<a href="/logout">Logout</a>
+
+</body>
+
+
+</html>
