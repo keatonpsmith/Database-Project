@@ -1,6 +1,8 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
+import datetime
+import hashlib
 
 #Initialize the app from Flask
 app = Flask(__name__)
@@ -9,8 +11,8 @@ app = Flask(__name__)
 conn = pymysql.connect(host='localhost',
                        port = 8889,
                        user='root',
-                       password='root',
-                       db='FlaskDemo',
+                       password='',
+                       db='pricosha',
                        charset='utf8mb4',
                        cursorclass=pymysql.cursors.DictCursor)
 
@@ -24,6 +26,10 @@ def hello():
 def login():
     return render_template('login.html')
 
+@app.route('/new_post')
+def new_post():
+    return render_template('new_post.html')
+
 #Define route for register
 @app.route('/register')
 def register():
@@ -35,6 +41,7 @@ def loginAuth():
     #grabs information from the forms
     email = request.form['email']
     password = request.form['password']
+    password = hashlib.sha256(password).hexdigest()
     #cursor used to send queries
     cursor = conn.cursor()
     #executes query
@@ -97,24 +104,27 @@ def home():
 def post():
     email = session['email']
     cursor = conn.cursor();
-    blog = request.form['blog']
-    query = 'INSERT INTO blog (blog_post, username) VALUES(%s, %s)'
-    cursor.execute(query, (blog, username))
+    name = request.form['name']
+    file_path = request.form['file_path']
+    post_time = datetime.datetime.now()
+    is_pub = request.form['is_pub']
+    query = 'INSERT INTO contentitem (item_name, file_path, email_post, post_time, is_pub) VALUES(%s, %s, %s, %s, %s)'
+    cursor.execute(query, (name, file_path, email, post_time, is_pub))
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
 
-@app.route('/select_blogger')
-def select_blogger():
+@app.route('/new_post')
+def new_post():
     #check that user is logged in
-    #username = session['username']
+    email = session['email']
     #should throw exception if username not found
     cursor = conn.cursor();
     query = 'SELECT DISTINCT username FROM blog'
     cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
-    return render_template('select_blogger.html', user_list=data)
+    return render_template('new_post.html', user_list=data)
 
 @app.route('/show_posts', methods=["GET", "POST"])
 def show_posts():
@@ -128,7 +138,7 @@ def show_posts():
 
 @app.route('/logout')
 def logout():
-    session.pop('username')
+    session.pop('email')
     return redirect('/')
         
 app.secret_key = 'some key that you will never guess'
