@@ -98,8 +98,8 @@ def registerAuth():
 def home():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM contentitem NATURAL LEFT JOIN rate WHERE (is_pub = 1 AND post_time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)) OR (email_post = %s) ORDER BY post_time DESC'
-    cursor.execute(query, (email))
+    query = 'SELECT * FROM contentitem WHERE is_pub = 1 AND post_time > DATE_SUB(CURDATE(), INTERVAL 1 DAY) ORDER BY post_time DESC'
+    cursor.execute(query)
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', email=email, posts=data)
@@ -120,15 +120,15 @@ def new_post():
     return redirect(url_for('home'))
     
 
-@app.route('/show_posts', methods=["GET", "POST"])
-def show_posts():
-    poster = request.args['poster']
+@app.route('/my_posts', methods=["GET", "POST"])
+def my_posts():
+    email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT ts, blog_post FROM blog WHERE username = %s ORDER BY ts DESC'
-    cursor.execute(query, poster)
+    query = 'SELECT * FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT * FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY post_time DESC'
+    cursor.execute(query, (email, email))
     data = cursor.fetchall()
     cursor.close()
-    return render_template('show_posts.html', poster_name=poster, posts=data)
+    return render_template('show_posts.html', posts=data)
 
 @app.route('/logout')
 def logout():

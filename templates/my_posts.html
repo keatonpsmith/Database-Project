@@ -9,16 +9,24 @@
 	}
 </style>
 
-Here are posts by {{poster_name}}:
+Here are your posts:
 
 <table>
+	<th>ID</th>
+	<th>Poster</th>
 	<th>Time</th>
-	<th>Post</th>
+	<th>File Path</th>
+	<th>Name</th>
 
 {% for line in posts %}
 	<tr>
-		<td>{{line.ts}}</td>
-		<td>{{line.blog_post}}</td>
+		<td>{{line.item_id}}</td>
+		<td>{{line.email_post}}</td>
+		<td>{{line.post_time}}</td>
+		<td>{{line.file_path}}</td>
+		<td>{{line.item_name}}</td>
+		<a href="/rating">Rating</a>
+		<a href="/tags">Tags</a>
 	</tr>
 {% endfor %}
 </table>

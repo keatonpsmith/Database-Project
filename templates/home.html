@@ -21,7 +21,6 @@ Posts:
 	<th>Post</th>
 	<th>Path</th>
 	<th>Poster</th>
-	<th>Rating</th>
 
 {% for line in posts %}
 	<tr>
@@ -30,10 +29,13 @@ Posts:
 		<td>{{line.item_name}}</td>
 		<td>{{line.file_path}}</td>
 		<td>{{line.email_post}}</td>
-		<td>{{line.emoji}}</td>
 	</tr>
 {% endfor %}
 </table>
+
+<a href="/my_posts">My Posts</a>
+
+</br>
 
 <a href="/logout">Logout</a>
 
