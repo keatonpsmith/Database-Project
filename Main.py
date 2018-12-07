@@ -112,19 +112,8 @@ def post():
     cursor.execute(query, (name, file_path, email, post_time, is_pub))
     conn.commit()
     cursor.close()
-    return redirect(url_for('home'))
-
-@app.route('/new_post')
-def new_post():
-    #check that user is logged in
-    email = session['email']
-    #should throw exception if username not found
-    cursor = conn.cursor();
-    query = 'SELECT DISTINCT username FROM blog'
-    cursor.execute(query)
-    data = cursor.fetchall()
-    cursor.close()
-    return render_template('new_post.html', user_list=data)
+    return redirect(url_for('new_post'))
+    
 
 @app.route('/show_posts', methods=["GET", "POST"])
 def show_posts():
