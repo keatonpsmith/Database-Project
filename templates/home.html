@@ -4,7 +4,7 @@
 <body>
 <form action="/post" method="POST">
 	<h1>Welcome {{email}}</h1> 
-	<a href="/New Post">new_post</a></br>
+	<a href="post">Post</a></br>
 </form>
 
 <style type="text/css">
@@ -13,24 +13,26 @@
 	}
 </style>
 
-Recent Public Posts:
+Posts:
 
 <table>
+	<th>ID</th>
 	<th>Time</th>
 	<th>Post</th>
+	<th>Path</th>
 	<th>Poster</th>
 
 {% for line in posts %}
 	<tr>
+		<td>{{line.item_id}}</td>
 		<td>{{line.post_time}}</td>
 		<td>{{line.item_name}}</td>
+		<td>{{line.file_path}}</td>
 		<td>{{line.email_post}}</td>
 	</tr>
 {% endfor %}
 </table>
 
-<a href="/select_blogger">Select a blogger</a>
-<br>
 <a href="/logout">Logout</a>
 
 </body>

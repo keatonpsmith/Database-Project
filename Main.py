@@ -1,7 +1,7 @@
 #Import Flask Library
 from flask import Flask, render_template, request, session, url_for, redirect
 import pymysql.cursors
-import datetime
+from datetime import datetime
 import hashlib
 
 #Initialize the app from Flask
@@ -25,14 +25,14 @@ def hello():
 def login():
     return render_template('login.html')
 
-@app.route('/new_post')
-def new_post():
-    return render_template('new_post.html')
-
 #Define route for register
 @app.route('/register')
 def register():
     return render_template('register.html')
+
+@app.route('/post')
+def post():
+    return render_template('post.html')
 
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
@@ -98,26 +98,26 @@ def registerAuth():
 def home():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM contentitem WHERE is_pub = 1 ORDER BY post_time DESC'
-    cursor.execute(query)
+    query = 'SELECT * FROM contentitem WHERE (is_pub = 1 AND post_time > DATE_SUB(CURDATE(), INTERVAL 1 DAY)) OR (email_post = %s) ORDER BY post_time DESC'
+    cursor.execute(query, (email))
     data = cursor.fetchall()
     cursor.close()
     return render_template('home.html', email=email, posts=data)
 
-        
-@app.route('/post', methods=['GET', 'POST'])
-def post():
+#creates a new post
+@app.route('/new_post', methods=['GET', 'POST'])
+def new_post():
     email = session['email']
     cursor = conn.cursor();
-    name = request.form['name']
+    title = request.form['title']
     file_path = request.form['file_path']
-    post_time = datetime.datetime.now()
-    is_pub = request.form['is_pub']
+    post_time = datetime.now()
+    is_pub = int(request.form['is_pub'])
     query = 'INSERT INTO contentitem (item_name, file_path, email_post, post_time, is_pub) VALUES(%s, %s, %s, %s, %s)'
-    cursor.execute(query, (name, file_path, email, post_time, is_pub))
+    cursor.execute(query, (title, file_path, email, post_time, is_pub))
     conn.commit()
     cursor.close()
-    return redirect(url_for('new_post.html'))
+    return redirect(url_for('home'))
     
 
 @app.route('/show_posts', methods=["GET", "POST"])
