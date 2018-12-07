@@ -25,19 +25,14 @@ Here are your posts:
 		<td>{{line.post_time}}</td>
 		<td>{{line.file_path}}</td>
 		<td>{{line.item_name}}</td>
-		<a href="/rating">Rating</a>
-		<a href="/tags">Tags</a>
+		<td><input type="submit" value = line.item_id/></td>
+		<td><a href="/tags">Tags</a></td>
 	</tr>
 {% endfor %}
 </table>
 
 <br>
-<br>
-<a href="/select_blogger">Select another blogger</a>
-<br>
-<br>
-<a href="/home">Post a message</a>
-<br>
+<a href="/home">Go Back</a>
 <br>
 <a href="/logout">Logout</a>
 

@@ -124,11 +124,17 @@ def new_post():
 def my_posts():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT * FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY post_time DESC'
+    query = 'SELECT * FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY post_time DESC'
     cursor.execute(query, (email, email))
     data = cursor.fetchall()
     cursor.close()
-    return render_template('show_posts.html', posts=data)
+    return render_template('my_posts.html', posts=data)
+
+@app.route('/tags', methods=["GET", "POST"])
+def tags():
+    email = session['email']
+    cursor = conn.cursor();
+    query = 'SELECT * FROM rate WHERE '
 
 @app.route('/logout')
 def logout():
