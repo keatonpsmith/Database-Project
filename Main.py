@@ -9,7 +9,6 @@ app = Flask(__name__)
 
 #Configure MySQL
 conn = pymysql.connect(host='localhost',
-                       port = 8889,
                        user='root',
                        password='',
                        db='pricosha',
@@ -41,6 +40,7 @@ def loginAuth():
     #grabs information from the forms
     email = request.form['email']
     password = request.form['password']
+    password = password.encode('utf-8')
     password = hashlib.sha256(password).hexdigest()
     #cursor used to send queries
     cursor = conn.cursor()
@@ -68,6 +68,11 @@ def registerAuth():
     #grabs information from the forms
     email = request.form['email']
     password = request.form['password']
+    password = request.form['password']
+    password = password.encode('utf-8')
+    password = hashlib.sha256(password).hexdigest()
+    fname = request.form['fname']
+    lname = request.form['lname']
     #cursor used to send queries
     cursor = conn.cursor()
     #executes query
@@ -82,8 +87,8 @@ def registerAuth():
         error = "This user already exists"
         return render_template('register.html', error = error)
     else:
-        ins = 'INSERT INTO person VALUES(%s, %s)'
-        cursor.execute(ins, (email, password))
+        ins = 'INSERT INTO person VALUES(%s, %s, %s, %s)'
+        cursor.execute(ins, (email, password, fname, lname))
         conn.commit()
         cursor.close()
         return render_template('index.html')
@@ -112,7 +117,7 @@ def post():
     cursor.execute(query, (name, file_path, email, post_time, is_pub))
     conn.commit()
     cursor.close()
-    return redirect(url_for('new_post'))
+    return redirect(url_for('new_post.html'))
     
 
 @app.route('/show_posts', methods=["GET", "POST"])
