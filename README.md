@@ -28,15 +28,14 @@ Feature: Leave Group
 Name: Ikra
 Why it is a good feature: This feature allows for a user to have the ability to leave a group. This way, they are not required to stay in a group they no longer want to be in, and don’t have to rely on the owner to drop them. 
 Changes to the database: No changes to the database schema 
-Queries: 
+Queries: DELETE FROM belong WHERE email = %s AND fg_name = %s
 Source code destination: The query and the code associated with the query can be found on line 236 in file main.py and the HTML code for leaving the group can be found in leave_group.html.
 
 Feature: Add comments 
 Name: Antoine 
 Why it is a good feature: Users can respond and be able to express their thoughts on the contents posted by themselves and other users. It is a good way to promote social interactions via the platform. 
-Changes to the database: 
-
-Queries:
+Changes to the database: Added the table comments with keys (commentor, comment, item_id, commenttime) to handle the existence of commments.
+Queries: INSERT INTO comments VALUES (%s, %s, %s, %s)
 query = 'SELECT item_id FROM contentitem WHERE item_id IN (SELECT item_id FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s))'
 Source code destination: The query and the code associated with the query above can be found in the main.py file on line 215.  HTML code is in file create_comments.html
 
@@ -44,6 +43,5 @@ Feature: View comments
 Name: Antoine
 Why it is a good feature: This feature allows for a view all comments on any posts they can regularly view. It displays the Commenter’s email, the post with which it is associated, the content of the comment, and the time of the comment.
 Changes to the database: No additional features from the Add Comments feature.
-Queries: 
-SELECT * FROM comments NATURAL LEFT JOIN share WHERE commentor = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY commenttime DESC
+Queries: SELECT * FROM comments NATURAL LEFT JOIN share WHERE commentor = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY commenttime DESC
 Source code destination: The query and the code associated with the query above can be found in the main.py file on line 206.  HTML code is in file comments.html
