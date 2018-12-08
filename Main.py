@@ -34,6 +34,7 @@ def register():
 def post():
     return render_template('post.html')
 
+<<<<<<< HEAD
 @app.route('/tag_someone')
 def tag_someone():
     return render_template('tag_content.html')
@@ -42,6 +43,15 @@ def tag_someone():
 def error():
     return render_template('error.html')
 
+=======
+@app.route('/new_friend')
+def newMember():
+    return render_template('new_user.html')
+
+@app.route('/old_friend')
+def oldMember():
+    return render_template('old_user.html')
+>>>>>>> origin/master
 
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
@@ -135,6 +145,32 @@ def new_post():
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
+
+#adds new user to group
+@app.route('/new_user', methods=['GET', 'POST'])
+def new_person():
+    cursor = conn.cursor();
+    groupName  = request.form['fg_name']
+    ownerEmail  = request.form['owner_email']
+    userEmail   = request.form['user_email']
+    query = 'INSERT INTO belong (email,owner_email,fg_name) VALUES(%s,%s,%s)'
+    cursor.execute(query, (userEmail,ownerEmail,groupName))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
+
+#removes a user from a group
+@app.route('/old_user', methods=['GET', 'POST'])
+def delete_person():
+    cursor = conn.cursor();
+    groupName  = request.form['fg_name']
+    ownerEmail  = request.form['owner_email']
+    userEmail   = request.form['user_email']
+    query = 'DELETE FROM belong WHERE email = %s AND owner_email = %s AND fg_name = %s'
+    cursor.execute(query, (userEmail,ownerEmail,groupName))
+    conn.commit()
+    cursor.close()
+    return redirect(url_for('home'))
     
 
 @app.route('/my_posts', methods=["GET", "POST"])
@@ -166,6 +202,16 @@ def ratings():
     data = cursor.fetchall()
     cursor.close()
     return render_template('ratings.html', posts=data)
+
+@app.route('/my_groups', methods=["GET", "POST"])
+def groups():
+    email = session['email']
+    cursor = conn.cursor();
+    query = 'SELECT * FROM own WHERE email = %s'
+    cursor.execute(query, (email))
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('groups.html', posts=data)
 
 @app.route('/manage_tags', methods=["GET", "POST"])
 def manage_tags():
