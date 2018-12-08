@@ -1,0 +1,24 @@
+<html>
+<head>
+</head>
+<body>
+
+Tag Someone!
+<br>
+<br>
+<form action="/tag_content" method="GET">
+	<input type="text" name = "id_post" placeholder="# of ID" required/> </br>
+    <input type="text" name = "email_tagged" placeholder="Email of tagee?" required/></br>
+    <input type="submit" value = Submit />
+    {% if error %}
+    <p class="error"><strong>Error:</strong> {{error}}</p>
+    {% endif %}
+</form>
+
+
+<a href="home">Go back</a>
+
+</body>
+
+
+</html>

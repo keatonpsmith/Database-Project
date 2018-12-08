@@ -34,6 +34,15 @@ def register():
 def post():
     return render_template('post.html')
 
+@app.route('/tag_someone')
+def tag_someone():
+    return render_template('tag_content.html')
+
+@app.route('/error')
+def error():
+    return render_template('error.html')
+
+
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -177,6 +186,32 @@ def manage_tags():
         cursor.execute(query, (idtodelete, email))
     cursor.close()
     return render_template('manage_tags.html', posts = data)
+
+@app.route('/tag_content', methods=["GET","POST"])
+def tag_content():
+    email = session['email']
+    cursor = conn.cursor();
+    item_id = int(request.args.get('id_post'))
+    email_tagged = request.args.get('email_tagged')
+    post_time = datetime.now()
+    query = 'SELECT item_id FROM contentitem WHERE item_id IN (SELECT item_id FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s))'
+    cursor.execute(query, (email_tagged, email_tagged))
+    data = cursor.fetchone()
+    if(data):
+        if (email_tagged == email):
+            query = 'INSERT INTO tag VALUES (%s, %s, %s, %s, %s)'
+            cursor.execute(query, (email, email, item_id, 'True', post_time))
+        else:
+            query = 'INSERT INTO tag VALUES (%s, %s, %s, %s, %s)'
+            cursor.execute(query, (email_tagged, email, item_id, 'False', post_time))
+    else:
+        redirect(url_for('error'))
+    cursor.close()
+    return redirect(url_for('home'))
+
+
+
+
 
 @app.route('/logout')
 def logout():
