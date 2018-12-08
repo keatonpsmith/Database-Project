@@ -149,10 +149,13 @@ def new_post():
 #adds new user to group
 @app.route('/new_user', methods=['GET', 'POST'])
 def new_person():
+    email = session['email']
     cursor = conn.cursor();
     groupName  = request.form['fg_name']
     ownerEmail  = request.form['owner_email']
     userEmail   = request.form['user_email']
+    if ownerEmail != email:
+        return redirect(url_for('error'))
     query = 'INSERT INTO belong (email,owner_email,fg_name) VALUES(%s,%s,%s)'
     cursor.execute(query, (userEmail,ownerEmail,groupName))
     conn.commit()
