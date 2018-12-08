@@ -233,6 +233,20 @@ def groups():
     cursor.close()
     return render_template('groups.html', posts=data)
 
+@app.route('/leave_group',methods = ["GET", "POST"])
+def leave_group():
+    email = session['email']
+    cursor = conn.cursor();
+    friendgroup_name = request.args.get('friendgroup_name')
+    query = 'DELETE FROM belong WHERE email = %s AND fg_name = %s'
+    cursor.execute(query, (email,friendgroup_name))
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('leave_group.html', posts = data)
+    
+
+
+
 @app.route('/manage_tags', methods=["GET", "POST"])
 def manage_tags():
     email = session['email']
