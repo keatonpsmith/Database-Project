@@ -28,8 +28,8 @@ Here are your pending tags:
 </br>
 
 <form action="/manage_tags" method="GET">
-	<input type="text" name = "idtoapprove" placeholder="# of tag to approve" /> </br>
-	<input type="text" name = "idtodelete" placeholder="# of tag to delete"/></br>
+	<input type="text" name = "idtoapprove" placeholder="# of tag to approve" value="-1" /> </br>
+	<input type="text" name = "idtodelete" placeholder="# of tag to delete" value="-1" /></br>
 	<input type="submit" value = Submit />
 	{% if error %}
 		<p class="error"><strong>Error:</strong> {{error}}</p>

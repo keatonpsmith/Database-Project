@@ -120,7 +120,6 @@ def new_post():
         query = 'SELECT item_id FROM contentitem WHERE item_name = %s AND email_post = %s'
         cursor.execute(query, (title, email))
         data = cursor.fetchone()
-        print(data)
         data = data.get('item_id')
         query = 'INSERT INTO share (owner_email, fg_name, item_id) VALUES(%s, %s, %s)'
         cursor.execute(query, (email, fgroup, data))
@@ -163,22 +162,21 @@ def ratings():
 def manage_tags():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM tag WHERE email_tagged = %s'
+    query = 'SELECT * FROM tag WHERE email_tagged = %s AND status = "False"'
     cursor.execute(query, email)
     data = cursor.fetchall()
+    idtoapprove = int(request.args.get('idtoapprove', default=-1))
+    idtodelete = int(request.args.get('idtodelete', default=-1))
+    print(idtoapprove)
+    print(idtodelete)
+    if(idtoapprove > 0):
+        query = 'UPDATE tag SET status = "True" WHERE item_id = %s'
+        cursor.execute(query, idtoapprove)
+    if(idtodelete > 0):
+        query = 'DELETE FROM tag WHERE item_id = %s AND email_tagged = %s'
+        cursor.execute(query, (idtodelete, email))
     cursor.close()
-    render_template('manage_tags.html', posts = data)
-    idtoapprove = int(request.form['idtoapprove'])
-    idtodelete = int(request.form['idtodelete'])
-    cursor = conn.cursor();
-    query = 'UPDATE tag SET status = "True" WHERE item_id = %s'
-    cursor.execute(query, idtoapprove)
-    cursor.close()
-    cursor = conn.cursor();
-    query = 'DELETE FROM tag WHERE item_id = %s AND email_tagged = %s'
-    cursor.execute(query, (idtodelete, email))
-    cursor.close()
-    return redirect(url_for('home'))
+    return render_template('manage_tags.html', posts = data)
 
 @app.route('/logout')
 def logout():
