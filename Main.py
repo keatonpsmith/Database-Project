@@ -295,10 +295,6 @@ def create_comment():
     return redirect(url_for('home'))
 
 
-
-
-
-
 @app.route('/logout')
 def logout():
     session.pop('email')
