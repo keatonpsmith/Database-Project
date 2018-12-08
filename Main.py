@@ -207,7 +207,7 @@ def ratings():
 def groups():
     email = session['email']
     cursor = conn.cursor();
-    query = 'SELECT * FROM own WHERE email = %s'
+    query = 'SELECT * FROM friendgroup WHERE owner_email = %s'
     cursor.execute(query, (email))
     data = cursor.fetchall()
     cursor.close()
