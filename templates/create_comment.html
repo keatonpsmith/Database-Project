@@ -1,0 +1,24 @@
+<html>
+<head>
+</head>
+<body>
+
+Add Comment!
+<br>
+<br>
+<form action="/create_comment" method="GET">
+	<input type="text" name = "id_post" placeholder="# of ID" required/> </br>
+    <input type="text" name = "comment" placeholder="Comment" required/></br>
+    <input type="submit" value = Submit />
+    {% if error %}
+    <p class="error"><strong>Error:</strong> {{error}}</p>
+    {% endif %}
+</form>
+
+
+<a href="home">Go back</a>
+
+</body>
+
+
+</html>

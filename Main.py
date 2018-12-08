@@ -34,6 +34,10 @@ def register():
 def post():
     return render_template('post.html')
 
+@app.route('/add_comment')
+def add_comment():
+    return render_template('create_comment.html')
+
 @app.route('/tag_someone')
 def tag_someone():
     return render_template('tag_content.html')
@@ -254,6 +258,26 @@ def tag_content():
         redirect(url_for('error'))
     cursor.close()
     return redirect(url_for('home'))
+
+
+@app.route('/create_comment', methods=["GET","POST"])
+def create_comment():
+    email = session['email']
+    cursor = conn.cursor();
+    item_id = int(request.args.get('id_post'))
+    comment = request.args.get('comment')
+    commenttime = datetime.now()
+    query = 'SELECT item_id FROM contentitem WHERE item_id IN (SELECT item_id FROM contentitem NATURAL LEFT JOIN share WHERE email_post = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s))'
+    cursor.execute(query, (email, email))
+    data = cursor.fetchone()
+    if(data):
+        query = 'INSERT INTO comments(commentor,comment,item_id,commenttime) VALUES (%s, %s, %s, %s)'
+        cursor.execute(query, (email, comment, item_id, commenttime))
+    else:
+        redirect(url_for('error'))
+    cursor.close()
+    return redirect(url_for('home'))
+
 
 
 

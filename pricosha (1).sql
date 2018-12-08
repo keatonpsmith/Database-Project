@@ -211,6 +211,17 @@ INSERT INTO `tag` (`email_tagged`, `email_tagger`, `item_id`, `status`, `tagtime
 ('GG@nyu.edu', 'AA@nyu.edu', 2, 'True', '2018-11-20 20:00:00'),
 ('BB@nyu.edu', 'WW@nyu.edu', 11, 'False', '2018-12-05 08:00:00'),
 ('CC@nyu.edu', 'BB@nyu.edu', 10, 'False', '2018-12-04 05:15:00');
+
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE IF NOT EXISTS `comments`( 
+  `commentor` varchar(20) NOT NULL, 
+  `comment` varchar(25) NOT NULL,
+  `item_id` int(11) NOT NULL, 
+  `commenttime` timestamp NULL DEFAULT NULL, 
+  PRIMARY KEY (`commentor`,`item_id`) 
+  KEY `commentor` (`commentor`),
+  KEY `item_id` (`item_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
