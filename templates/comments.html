@@ -1,0 +1,40 @@
+<html>
+<head>
+</head>
+<body>
+
+<style type="text/css">
+	table, th, td{
+		border: 1px solid black;
+	}
+</style>
+
+Here are comments on your post:
+
+<table>
+	<th>commentor</th>
+	<th>ID</th>
+	<th>Comment</th>
+	<th>Time</th>
+
+{% for line in comments %}
+	<tr>
+		<td>{{line.commentor}}</td>
+		<td>{{line.item_id}}</td>
+		<td>{{line.comment}}</td>
+		<td>{{line.commenttime}}</td>
+	</tr>
+{% endfor %}
+</table>
+
+
+<br>
+<a href="/home">Go Back</a>
+<br>
+<a href="/logout">Logout</a>
+
+
+</body>
+
+
+</html>

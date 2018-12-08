@@ -203,6 +203,16 @@ def my_posts():
     cursor.close()
     return render_template('my_posts.html', posts=data)
 
+@app.route('/comments', methods=["GET", "POST"])
+def comments():
+    email = session['email']
+    cursor = conn.cursor();
+    query = 'SELECT * FROM comments NATURAL LEFT JOIN share WHERE commentor = %s OR item_id IN (SELECT item_id FROM share NATURAL JOIN belong WHERE email = %s) ORDER BY commenttime DESC'
+    cursor.execute(query, (email, email))
+    data = cursor.fetchall()
+    cursor.close()
+    return render_template('comments.html', comments=data)
+
 @app.route('/tags', methods=["GET", "POST"])
 def tags():
     email = session['email']
@@ -301,10 +311,12 @@ def create_comment():
     cursor.execute(query, (email, email))
     data = cursor.fetchone()
     if(data):
-        query = 'INSERT INTO comments(commentor,comment,item_id,commenttime) VALUES (%s, %s, %s, %s)'
+        print(email, comment, item_id, commenttime)
+        query = 'INSERT INTO comments VALUES (%s, %s, %s, %s)'
         cursor.execute(query, (email, comment, item_id, commenttime))
     else:
         redirect(url_for('error'))
+    conn.commit()
     cursor.close()
     return redirect(url_for('home'))
 
