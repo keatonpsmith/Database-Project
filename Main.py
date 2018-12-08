@@ -54,6 +54,11 @@ def newMember():
 def oldMember():
     return render_template('old_user.html')
 
+
+@app.route('/create_group')
+def newGroup():
+    return render_template('new_group.html')
+
 #Authenticates the login
 @app.route('/loginAuth', methods=['GET', 'POST'])
 def loginAuth():
@@ -166,6 +171,7 @@ def new_person():
 #removes a user from a group
 @app.route('/old_user', methods=['GET', 'POST'])
 def delete_person():
+    
     cursor = conn.cursor();
     groupName  = request.form['fg_name']
     ownerEmail  = request.form['owner_email']
@@ -175,7 +181,17 @@ def delete_person():
     conn.commit()
     cursor.close()
     return redirect(url_for('home'))
-    
+
+#creates a new group
+@app.route('/create_new_group', methods=['GET', 'POST'])
+def create_new_group():  
+    email = session['email']
+    cursor = conn.cursor();
+    groupName  = request.form['fg_name']
+    query = 'INSERT INTO friendgroup (owner_email,fg_name) VALUES(%s,%s)'
+    cursor.execute(query, (email,groupName))
+    return redirect(url_for('home'))  
+
 
 @app.route('/my_posts', methods=["GET", "POST"])
 def my_posts():
